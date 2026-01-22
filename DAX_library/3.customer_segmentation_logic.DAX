@@ -1,0 +1,40 @@
+/* ===============================================================================
+Description: 
+    This script contains the logic for categorizing customers and products. 
+    It enables demographic analysis and lifecycle tracking.
+===============================================================================
+*/
+
+-- 1. DYNAMIC CUSTOMER AGE BINNING
+-- Purpose: Groups customers into age cohorts based on their age at the time 
+-- of their most recent purchase. 
+-- Logic: Uses a Variable (VAR) to calculate exact age, then SWITCH(TRUE()) 
+-- to bucketize the results for cleaner visualization.
+age_bins = 
+VAR age = DATEDIFF('gold dim_customers'[birth_date], MAX('gold fact_sales'[order_date]), YEAR)
+RETURN
+SWITCH(TRUE(),
+    age < 30 , "18-29",
+    age < 40 , "30-39",
+    age < 50 , "40-49",
+    age < 60 , "50-59",
+    age >= 60 , "60 & Above"
+)
+
+
+-- 2. CUSTOMER LIFESPAN (MONTHS)
+-- Purpose: Measures the duration of the customer relationship.
+-- Logic: Calculates the number of months between a customer's very first 
+-- and very last order date.
+lifespan = 
+DATEDIFF(
+    MIN('gold fact_sales'[order_date]), 
+    MAX('gold_fact_sales'[order_date]), 
+    MONTH
+)
+
+/* DESIGN NOTE:
+The 'age_bins' calculation is highly robust because it references the 'MAX order date' 
+rather than 'TODAY()'. This ensures that the demographic analysis remains accurate 
+relative to the historical data provided in the SQL Warehouse.
+*/
