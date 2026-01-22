@@ -1,0 +1,48 @@
+/* ===============================================================================
+Description: 
+    This script contains core financial KPIs including profitability analysis 
+    and smoothed sales trends using moving averages.
+===============================================================================
+*/
+
+-- 1. COST OF GOODS SOLD (COGS)
+-- Purpose: Calculates total cost by pulling the unit cost from the Product Dimension 
+-- into the Sales Fact table.
+COGS = 
+    RELATED('gold_dim_products'[product_cost]) * 'gold_fact_sales'[quantity]
+
+
+-- 2. TOTAL PROFIT
+-- Purpose: Measures the absolute "Gross Profit" by subtracting total costs from total revenue.
+total_profit = 
+    SUM('gold_fact_sales'[sales_amount]) - SUM('gold_fact_sales'[COGS])
+
+
+-- 3. NET PROFIT MARGIN (%)
+-- Purpose: Measures efficiency by showing what percentage of revenue is retained as profit. 
+-- This is a critical Executive KPI for assessing business health.
+net_profit = 
+    DIVIDE([total_profit], SUM('gold_fact_sales'[sales_amount]), 0)
+
+
+-- 4. 12-MONTH MOVING AVERAGE
+-- Purpose: Smooths out monthly sales volatility and seasonality to identify 
+-- long-term revenue trends.
+-- Logic: It iterates over a rolling 12-month window starting from the last date in the current filter.
+12-Month Moving Average = 
+    AVERAGEX(
+        DATESINPERIOD(
+            dim_date[Date], 
+            LASTDATE(dim_date[Date]), 
+            -12, 
+            MONTH
+        ),
+        SUM('gold_fact_sales'[sales_amount])
+    )
+
+
+/* DESIGN NOTE:
+Using DIVIDE() for the Net Profit Margin ensures the dashboard handles 
+"Divide by Zero" errors gracefully if no sales are recorded in a filtered period.
+The 12-Month Moving Average relies on a continuous 'dim_date' table to function correctly.
+*/
