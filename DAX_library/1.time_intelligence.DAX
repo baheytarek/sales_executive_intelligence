@@ -1,0 +1,29 @@
+/* ===============================================================================
+Description: 
+    This script contains the logic for creating a dynamic Date Dimension (dim_date)
+    and custom time-period attributes to support executive reporting.
+===============================================================================
+*/
+
+-- 1. DYNAMIC DATE DIMENSION
+-- Purpose: Creates a continuous date range based on the sales transactions. 
+-- This is essential for time-intelligence functions like Moving Averages and YoY growth.
+dim_date = 
+    CALENDAR(
+        MIN('gold_fact_sales'[order_date]), 
+        MAX('gold_fact_sales'[order_date])
+    )
+
+
+-- 2. FISCAL/CALENDAR QUARTERLY FORMATTING
+-- Purpose: Provides a human-readable string for quarterly analysis (e.g., "2023 Q1").
+-- The concatenation of Year and Quarter ensures proper sorting and clear labeling in charts.
+Quarter = 
+    YEAR(dim_date[Date]) & " Q" & QUARTER(dim_date[Date])
+
+
+/* DESIGN NOTE:
+By using the MIN/MAX of 'gold_fact_sales', the date table automatically scales 
+if the SQL Warehouse refreshes with new transactional data. This ensures the 
+dashboard never has "empty" future dates or missing historical dates.
+*/
