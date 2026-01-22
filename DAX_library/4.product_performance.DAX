@@ -1,0 +1,33 @@
+/* ===============================================================================
+Description: 
+    This script handles the automated categorization of the product catalog 
+    based on historical revenue performance.
+===============================================================================
+*/
+
+-- 1. PRODUCT PERFORMANCE SEGMENTATION
+-- Purpose: Automatically classifies products into "Top", "Mid", and "Low" tiers.
+-- Logic: 
+--   1. It uses a Variable (VAR) to calculate the total sales for each specific product.
+--   2. It uses ALLEXCEPT to ensure the calculation looks at the product's total 
+--      history, ignoring any page-level slicers (like date or region).
+--   3. It uses SWITCH(TRUE()) as a cleaner alternative to nested IF statements.
+product_segment = 
+VAR total_sales = 
+    CALCULATE(
+        SUM('gold fact_sales'[sales_amount]), 
+        ALLEXCEPT('gold dim_products', 'gold dim_products'[product_key])
+    )
+RETURN 
+    SWITCH(TRUE(),
+        total_sales > 50000, "Top-performer",
+        total_sales > 10000, "Mid-Level",
+        "Low Performer"
+    )
+
+/* DESIGN NOTE:
+The use of ALLEXCEPT is a strategic choice. It ensures that a product's 
+classification remains consistent throughout the report. For example, a 
+"Top-performer" won't suddenly look like a "Low Performer" just because a 
+user filtered the report to a single month.
+*/
