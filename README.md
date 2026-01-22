@@ -99,3 +99,17 @@ Power BI Desktop: UI/UX Design, Data Visualization, and Modeling.
 DAX: Advanced analytical measures and calculated columns.
 SQL Server: Source data hosting (Gold Layer).
 GitHub: Version control and project documentation.
+
+---
+## 🛡️ License
+
+This project is licensed under the MIT License. You are free to use, modify, and share this project with proper attribution.
+
+--- 
+
+## 🌟 About Me
+Hi there! I'm Bahey Eldeen Tarek Sabry Sedeeq , and I'm an IT professional and WFM Real-Time Analyst at Atos Egypt. I am driven to optimize contact center performance using tools like NICE IEX, Power BI, and advanced SQL.
+
+Let's stay in touch! You can connect with me on LinkedIn:
+
+LinkedIn: /baheytarek Gmail: Baheytarek5
