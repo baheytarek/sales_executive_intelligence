@@ -95,10 +95,10 @@ Cost vs. Profit: High-cost bike models drive the highest absolute profit, while 
 ---
 
 🛠️ Tools & Technologies
-Power BI Desktop: UI/UX Design, Data Visualization, and Modeling.
-DAX: Advanced analytical measures and calculated columns.
-SQL Server: Source data hosting (Gold Layer).
-GitHub: Version control and project documentation.
+- Power BI Desktop: UI/UX Design, Data Visualization, and Modeling.
+- DAX: Advanced analytical measures and calculated columns.
+- SQL Server: Source data hosting (Gold Layer).
+- GitHub: Version control and project documentation.
 
 ---
 ## 🛡️ License
